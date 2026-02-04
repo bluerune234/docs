@@ -5,7 +5,7 @@ description: "Autonomous background workflows that execute over time"
 
 # Tasks
 
-Tasks are autonomous background workflows that Wovly executes over time. Unlike chat (immediate responses), Tasks handle multi-step processes that may require waiting for replies, coordinating schedules, or following up over days.
+Tasks are autonomous background workflows that Wovly executes over time. Unlike chat (immediate responses), Tasks handle multi-step processes that may require waiting for replies, coordinating schedules, monitoring for events, or following up over days.
 
 ## When to Use Tasks
 
@@ -20,73 +20,188 @@ Tasks are autonomous background workflows that Wovly executes over time. Unlike 
     
     Monitors for replies over days
   </Card>
-  <Card title="Coordination" icon="users">
-    "Coordinate dinner plans with Sarah"
+  <Card title="Reminders" icon="bell">
+    "Remind me to take my medication at 9am daily"
     
-    Negotiates details through messages
+    Time-based recurring notifications
   </Card>
-  <Card title="Multi-step" icon="list-check">
-    "Research contractors, email top 3, get quotes"
+  <Card title="Monitoring" icon="eye">
+    "Watch my inbox for emails from the client"
     
-    Multiple sequential actions
+    Continuous event monitoring
   </Card>
 </CardGroup>
 
 ## How Tasks Work
 
+### The Architect-Builder System
+
+When you create a task, Wovly uses a two-stage AI system to plan and execute it:
+
+```mermaid
+flowchart LR
+    A[Your Request] --> B[Architect]
+    B --> C[Logical Steps]
+    C --> D[Builder]
+    D --> E[Executable Plan]
+    E --> F[Task Executor]
+```
+
+1. **The Architect** analyzes your intent and creates logical steps
+2. **The Builder** maps those steps to specific tools and actions
+3. **The Executor** runs the plan, handling timing and state
+
+### Polling-Based Execution
+
+Tasks run on a polling model—they execute at regular intervals rather than continuously:
+
 ```mermaid
 sequenceDiagram
+    participant Task
+    participant Clock
+    participant Tools
     participant You
-    participant Wovly
-    participant External
     
-    You->>Wovly: "Schedule meeting with John"
-    Wovly->>Wovly: Create Task
-    Wovly->>External: Send initial email
-    Note over Wovly: Task waits for reply
-    External->>Wovly: John replies
-    Wovly->>External: Respond with availability
-    External->>Wovly: John confirms
-    Wovly->>Wovly: Create calendar event
-    Wovly->>You: "Meeting scheduled!"
+    loop Every Poll Cycle
+        Task->>Clock: get_current_time
+        Task->>Task: Check conditions
+        alt Condition Met
+            Task->>Tools: Execute action
+            Task->>You: Notify
+        else Condition Not Met
+            Task->>Task: Wait for next cycle
+        end
+    end
+```
+
+<Note>
+Tasks can be configured to poll at different intervals: every minute for urgent monitoring, hourly for less time-sensitive tasks, or triggered on app login for daily reports.
+</Note>
+
+## Task Types
+
+| Type | Description | Example |
+|------|-------------|---------|
+| **Discrete** | Has an end goal, completes when done | "Schedule meeting with John" |
+| **Continuous** | Runs indefinitely until cancelled | "Remind me at 12pm daily" |
+
+## Task Primitive Tools
+
+Tasks have access to fundamental tools that enable sophisticated workflows:
+
+### Variable Management
+
+Tasks can save and retrieve information across execution cycles:
+
+| Tool | Description |
+|------|-------------|
+| `save_variable` | Store a value (e.g., `target_time`, `reminded_today`) |
+| `get_variable` | Read a stored value |
+| `check_variable` | Check if a variable exists or equals a value |
+
+### Time Operations
+
+Built-in tools for time-based logic:
+
+| Tool | Description |
+|------|-------------|
+| `get_current_time` | Get current date/time |
+| `parse_time` | Convert "12pm" to hour/minute |
+| `check_time_passed` | Check if current time >= target |
+| `is_new_day` | Check if calendar day changed |
+
+### Control Flow
+
+Tools for task logic and flow:
+
+| Tool | Description |
+|------|-------------|
+| `evaluate_condition` | Compare values (==, !=, >, <, contains) |
+| `goto_step` | Jump to a specific step in the plan |
+| `complete_task` | Mark task as finished |
+
+### Communication
+
+Ways for tasks to interact with you:
+
+| Tool | Description |
+|------|-------------|
+| `send_reminder` | Display a reminder message |
+| `notify_user` | Send status updates |
+| `send_chat_message` | Send any message to chat |
+| `ask_user_question` | Ask a question and wait for your reply |
+
+## Example: Daily Reminder
+
+Here's how a "remind me at 12pm daily" task works internally:
+
+```mermaid
+flowchart TD
+    A[Poll Cycle Starts] --> B[Get current time]
+    B --> C{New day?}
+    C -->|Yes| D[Reset reminded_today flag]
+    C -->|No| E{Time >= 12pm?}
+    D --> E
+    E -->|No| F[End cycle, wait for next poll]
+    E -->|Yes| G{Already reminded today?}
+    G -->|Yes| F
+    G -->|No| H[Send reminder]
+    H --> I[Set reminded_today = true]
+    I --> F
 ```
 
 ## Creating Tasks
 
 ### From Chat
 
-When your request needs a Task, Wovly will offer to create one:
+When your request needs a Task, Wovly will analyze it and offer a plan:
 
 ```
-You: Email Jeff to schedule a meeting next week
+You: Remind me to take my vitamins at 9am every day
 
-Wovly: This will require back-and-forth to negotiate a time.
-       Should I create a Task to handle the scheduling?
+Wovly: I've analyzed your request and created a plan:
 
-You: Yes
+**Daily Vitamin Reminder**
 
-Wovly: Task created: "Schedule meeting with Jeff"
-       I'll send the initial email and notify you of progress.
+1. Parse and save target time (9:00 AM)
+2. Check if it's a new day (reset reminder flag)
+3. Get current time
+4. Check if target time has passed
+5. If time passed and not reminded: send reminder
+6. Save "reminded today" status
+
+This is a continuous task that will run until cancelled.
+Should I create this task?
 ```
 
-### Automatic
+### Interactive Tasks
 
-Some requests automatically become Tasks:
+Tasks can ask you questions mid-execution:
 
 ```
-You: Follow up with the vendors until we get quotes
+Task: Research competitors
 
-Wovly: Creating a Task to handle vendor follow-ups...
-       Task created: "Get vendor quotes"
+I found 15 potential competitors. Which industry 
+segment should I focus on?
+
+Options:
+1. Enterprise SaaS
+2. SMB Tools  
+3. Consumer Apps
+
+[Reply in chat to continue]
 ```
+
+Your response is saved and the task continues with your input.
 
 ## Task States
 
 | State | Description |
 |-------|-------------|
 | **Active** | Task is running and executing steps |
-| **Waiting** | Task is waiting for external reply |
-| **Pending Approval** | Task needs your input to continue |
+| **Waiting** | Task is waiting for external event (reply, time) |
+| **Waiting for Input** | Task needs your answer to continue |
+| **Pending Approval** | Task drafted a message for your review |
 | **Completed** | Task finished successfully |
 | **Failed** | Task encountered an error |
 
@@ -95,8 +210,9 @@ Wovly: Creating a Task to handle vendor follow-ups...
 Go to the **Tasks** page to see all tasks:
 
 - Click a task to view its full history
-- See the current step and plan
+- See the current step and execution plan
 - View the execution log with timestamps
+- See stored variables and context
 
 ## Approvals
 
@@ -136,14 +252,14 @@ Should I proceed with the cheapest (Quick Fix)?
 
 Or in chat:
 ```
-You: Cancel the vendor follow-up task
+You: Cancel the reminder task
 ```
 
 ### Provide Input
 
-When a task needs your input:
+When a task asks a question:
 ```
-You: For the vendor task, go with ABC Plumbing
+You: Focus on Enterprise SaaS competitors
 ```
 
 ### Check Status
@@ -156,13 +272,16 @@ Wovly: The "Schedule meeting with Jeff" task is waiting for
        2 hours ago.
 ```
 
-## Messaging Channel Consistency
+## Poll Interval Configuration
 
-Tasks maintain consistent messaging channels throughout execution:
+Tasks can be configured with different polling frequencies:
 
-- If you say "text Jeff...", the task uses iMessage for all communication
-- If you say "in Slack message...", the task uses Slack throughout
-- The channel is locked at task creation and never switched
+| Interval | Use Case |
+|----------|----------|
+| **1 minute** | Time-sensitive reminders, urgent monitoring |
+| **5 minutes** | Regular inbox checks |
+| **1 hour** | Periodic status updates |
+| **On login** | Daily reports, morning briefings |
 
 ## Best Practices
 
@@ -179,5 +298,9 @@ Tasks maintain consistent messaging channels throughout execution:
 </Tip>
 
 <Tip>
-  **Use for repetitive work** - Tasks excel at follow-ups, scheduling, and coordination
+  **Use continuous tasks for monitoring** - "Alert me when I get an email from the client" runs until you cancel it
+</Tip>
+
+<Tip>
+  **Respond to questions promptly** - Tasks waiting for your input are paused until you reply
 </Tip>

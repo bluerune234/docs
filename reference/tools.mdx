@@ -206,6 +206,194 @@ List all tasks.
 |-----------|------|----------|-------------|
 | (none) | | | Returns task list |
 
+## Task Primitive Tools
+
+These fundamental tools enable sophisticated task workflows with state management, time operations, and control flow.
+
+### Variable Management
+
+#### save_variable
+
+Save a named variable to task memory. Persists across poll cycles.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | Yes | Variable name (e.g., "alarm_time", "reminded_today") |
+| value | string | Yes | Value to store |
+| description | string | No | What this variable is for |
+
+#### get_variable
+
+Read a previously saved variable from task memory.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | Yes | Variable name to read |
+
+**Returns:** `{ exists: boolean, value: string | null }`
+
+#### check_variable
+
+Check if a variable exists and optionally compare its value.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | Yes | Variable name to check |
+| equals | string | No | Check if value equals this |
+| not_equals | string | No | Check if value does not equal this |
+
+**Returns:** `{ exists: boolean, matches: boolean | null }`
+
+### Time Operations
+
+#### get_current_time
+
+Get the current date and time.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| timezone | string | No | Timezone (defaults to local) |
+
+**Returns:** `{ hour: number, minute: number, dayOfWeek: string, formatted: string }`
+
+#### parse_time
+
+Parse a time string into components.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| time_string | string | Yes | Time to parse (e.g., "12pm", "2:30 PM", "14:00") |
+
+**Returns:** `{ hour: number, minute: number, formatted_24h: string, formatted_12h: string }`
+
+#### check_time_passed
+
+Check if the current time has passed a target time today.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| target_hour | number | Yes | Target hour (0-23) |
+| target_minute | number | No | Target minute (0-59, default 0) |
+| tolerance_minutes | number | No | Minutes past target still valid (default 60) |
+
+**Returns:** `{ passed: boolean, within_window: boolean, minutes_past: number }`
+
+#### is_new_day
+
+Check if it's a new calendar day since the last recorded date.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| last_date | string | Yes | Last recorded date (YYYY-MM-DD) |
+
+**Returns:** `{ is_new_day: boolean, current_date: string }`
+
+### Control Flow
+
+#### evaluate_condition
+
+Evaluate a comparison condition.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| left | string | Yes | Left operand |
+| operator | string | Yes | ==, !=, >, <, >=, <=, contains, starts_with, ends_with |
+| right | string | Yes | Right operand |
+
+**Returns:** `{ result: boolean, expression: string }`
+
+#### goto_step
+
+Jump to a specific step in the task plan.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| step_number | number | Yes | Step number to jump to (1-indexed) |
+| reason | string | No | Why we're jumping |
+
+#### complete_task
+
+Mark the task as completed.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| summary | string | Yes | Summary of what was accomplished |
+
+### String Manipulation
+
+#### format_string
+
+Format a template string with variable substitution.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| template | string | Yes | Template with {placeholders} |
+| variables | object | Yes | Key-value pairs to substitute |
+
+**Example:** `format_string("Hello {name}", { name: "Jeff" })` → `"Hello Jeff"`
+
+#### increment_counter
+
+Increment a numeric counter variable.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | Yes | Counter variable name |
+| amount | number | No | Increment amount (default 1, negative to decrement) |
+
+**Returns:** `{ previous: number, current: number }`
+
+### Communication
+
+#### send_reminder
+
+Send a reminder message to the user in chat.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| message | string | Yes | Reminder message |
+
+#### notify_user
+
+Send a notification to the user.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| message | string | Yes | Notification message |
+| type | string | No | info, success, warning, question |
+
+#### send_chat_message
+
+Send a general message to the chat window.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| message | string | Yes | Message to send |
+| format | string | No | plain or markdown (default: markdown) |
+
+#### ask_user_question
+
+Ask the user a question and wait for their response.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| question | string | Yes | Question to ask |
+| save_response_as | string | No | Variable name to save response |
+| options | array | No | Suggested options for the user |
+
+**Note:** Task pauses until the user replies in chat.
+
+### Logging
+
+#### log_event
+
+Add an entry to the task's execution log.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| message | string | Yes | Log message |
+| level | string | No | info, warning, error, debug |
+
 ## Documentation Tools
 
 ### fetch_documentation
