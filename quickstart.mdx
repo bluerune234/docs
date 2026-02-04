@@ -7,32 +7,53 @@ description: "Get Wovly up and running in 5 minutes"
 
 Get Wovly running and connected to your first integration in just a few minutes.
 
-## Step 1: Download and Install
+## Prerequisites
 
-Download the latest release for your platform:
+Before you begin, make sure you have:
 
-<CardGroup cols={3}>
-  <Card title="macOS" icon="apple">
-    Download `.dmg` file and drag to Applications
-  </Card>
-  <Card title="Windows" icon="windows">
-    Download `.exe` installer and run
-  </Card>
-  <Card title="Linux" icon="linux">
-    Download `.AppImage` and make executable
-  </Card>
-</CardGroup>
+- **Node.js 18+** - Download from [nodejs.org](https://nodejs.org)
+- **Git** - Download from [git-scm.com](https://git-scm.com)
+- **macOS, Windows, or Linux**
+- An API key for at least one LLM provider (Anthropic, OpenAI, or Google)
+
+## Step 1: Clone and Install
+
+Open your terminal and run:
+
+```bash
+# Clone the repository
+git clone https://github.com/wovly/wovly.git
+cd wovly
+
+# Install dependencies
+npm install
+
+# Start the application
+npm run dev
+```
 
 <Note>
-  macOS users: If you see "app is damaged", run: `xattr -cr /Applications/Wovly.app`
+  The first run may take a moment while dependencies are compiled. The app window will open automatically when ready.
 </Note>
 
-## Step 2: Configure LLM Provider
+## Step 2: Create an Account
 
-Wovly needs an LLM (Large Language Model) to power its AI capabilities. Choose one:
+When Wovly opens:
 
-1. Open Wovly and go to **Settings**
-2. Enter your API key for one of:
+1. Click **Create Account**
+2. Enter a username and password
+3. This creates a local profile on your machine (no cloud account needed)
+
+<Tip>
+  All data is stored locally on your device. Your credentials are never sent to any server.
+</Tip>
+
+## Step 3: Configure LLM Provider
+
+Wovly needs an LLM (Large Language Model) to power its AI capabilities:
+
+1. Go to **Settings** (gear icon in sidebar)
+2. Under **AI Providers**, enter your API key for one of:
    - **Anthropic Claude** (recommended) - Get key at [console.anthropic.com](https://console.anthropic.com)
    - **OpenAI GPT** - Get key at [platform.openai.com](https://platform.openai.com)
    - **Google Gemini** - Get key at [aistudio.google.com](https://aistudio.google.com)
@@ -41,29 +62,30 @@ Wovly needs an LLM (Large Language Model) to power its AI capabilities. Choose o
   Claude Sonnet is recommended for the best balance of capability and speed.
 </Tip>
 
-## Step 3: Connect Your First Integration
+## Step 4: Connect Your First Integration
 
-Go to the **Integrations** page and connect at least one platform:
+Go to the **Integrations** page (plug icon in sidebar) and connect at least one platform:
 
 ### Google Workspace (Gmail + Calendar)
 
 1. Click **Connect** on Google Workspace
-2. Sign in with your Google account
-3. Grant permissions for Gmail and Calendar access
+2. Enter your Google Cloud OAuth credentials (see [Google Workspace setup](/integrations/google-workspace))
+3. Sign in with your Google account
+4. Grant permissions for Gmail and Calendar access
 
 ### Slack
 
 1. Click **Connect** on Slack
-2. Sign in to your Slack workspace
+2. Follow the setup wizard to create a Slack app
 3. Authorize Wovly to send messages as you
 
 ### iMessage (macOS only)
 
 1. Click **Enable** on iMessage
-2. Grant Wovly **Full Disk Access** in System Preferences
+2. Grant **Full Disk Access** in System Preferences → Privacy & Security
 3. Grant **Contacts** access when prompted
 
-## Step 4: Start Chatting
+## Step 5: Start Chatting
 
 You're ready! Try these example requests:
 
@@ -74,7 +96,20 @@ You're ready! Try these example requests:
 
 "Text Sarah happy birthday"
 
-"Find flights to New York next month"
+"Remind me to take my vitamins at 9am daily"
+```
+
+## Development Commands
+
+```bash
+# Start in development mode (hot reload)
+npm run dev
+
+# Build for production
+npm run build
+
+# Run linter
+npm run lint
 ```
 
 ## What's Next?
@@ -93,3 +128,17 @@ You're ready! Try these example requests:
     Discover everything Wovly can do
   </Card>
 </CardGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="npm install fails">
+    Make sure you have Node.js 18+ installed. Run `node --version` to check.
+  </Accordion>
+  <Accordion title="App window doesn't open">
+    Check the terminal for errors. You may need to install additional dependencies for Electron on Linux.
+  </Accordion>
+  <Accordion title="iMessage not working (macOS)">
+    Ensure Full Disk Access is granted in System Preferences → Privacy & Security → Full Disk Access.
+  </Accordion>
+</AccordionGroup>
