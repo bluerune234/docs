@@ -70,7 +70,7 @@
       "anchors": [
         {
           "anchor": "GitHub",
-          "href": "https://github.com/bluerune234/wovly",
+          "href": "https://github.com/wovly/wovly",
           "icon": "github"
         }
       ]
@@ -84,7 +84,7 @@
     "primary": {
       "type": "button",
       "label": "Download",
-      "href": "https://github.com/bluerune234/wovly/releases"
+      "href": "https://github.com/wovly/wovly/releases"
     }
   },
   "contextual": {
@@ -98,7 +98,7 @@
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/bluerune234/wovly"
+      "github": "https://github.com/wovly/wovly"
     }
   }
 }
