@@ -1,17 +1,24 @@
 ---
 title: "Installation"
-description: "Detailed installation instructions for all platforms"
+description: "Installation instructions for macOS"
 ---
 
 # Installation
 
+<Note>
+  **Beta Notice:** Wovly is currently in beta. We appreciate your feedback! [Report bugs and request features](https://github.com/wovly/wovly/issues) on GitHub.
+</Note>
+
+## Platform Support
+
+Wovly currently supports **macOS** only. Windows and Linux support is coming soon.
+
 ## System Requirements
 
 - **macOS**: 10.15 (Catalina) or later
-- **Windows**: Windows 10 or later
-- **Linux**: Ubuntu 20.04+ or equivalent
+- **Node.js**: 18+ (for development mode)
 
-### For iMessage Integration (macOS only)
+### For iMessage Integration
 - Full Disk Access permission
 - Contacts access permission
 
@@ -20,22 +27,20 @@ description: "Detailed installation instructions for all platforms"
 
 ## Download
 
-Download the latest release from [GitHub Releases](https://github.com/bluerune234/wovly/releases).
+Download the latest release from [GitHub Releases](https://github.com/wovly/wovly/releases).
 
 | Platform | File | Notes |
 |----------|------|-------|
 | macOS (Intel) | `Wovly-x.x.x.dmg` | For older Macs |
 | macOS (Apple Silicon) | `Wovly-x.x.x-arm64.dmg` | For M1/M2/M3 Macs |
-| Windows | `Wovly-Setup-x.x.x.exe` | Installer |
-| Linux | `Wovly-x.x.x.AppImage` | Portable |
 
-## macOS Installation
+## Installation
 
-1. Download the `.dmg` file for your architecture
+1. Download the `.dmg` file for your Mac architecture
 2. Open the `.dmg` and drag Wovly to Applications
 3. Launch Wovly from Applications
 
-### Troubleshooting macOS
+### Troubleshooting
 
 <AccordionGroup>
   <Accordion title="App is damaged and can't be opened">
@@ -49,33 +54,9 @@ Download the latest release from [GitHub Releases](https://github.com/bluerune23
   </Accordion>
 </AccordionGroup>
 
-## Windows Installation
-
-1. Download the `.exe` installer
-2. Run the installer and follow prompts
-3. Wovly will be available in the Start menu
-
-## Linux Installation
-
-1. Download the `.AppImage` file
-2. Make it executable:
-   ```bash
-   chmod +x Wovly-x.x.x.AppImage
-   ```
-3. Run the AppImage:
-   ```bash
-   ./Wovly-x.x.x.AppImage
-   ```
-
 ## Data Location
 
-Wovly stores all data locally:
-
-| Platform | Location |
-|----------|----------|
-| macOS | `~/.wovly-assistant/` |
-| Windows | `%APPDATA%/wovly-assistant/` |
-| Linux | `~/.wovly-assistant/` |
+Wovly stores all data locally in `~/.wovly-assistant/`:
 
 ### Data Files
 
@@ -99,14 +80,38 @@ Wovly will notify you when updates are available. To update:
 
 ## Uninstalling
 
-### macOS
 1. Drag Wovly from Applications to Trash
 2. Optionally delete data: `rm -rf ~/.wovly-assistant`
 
-### Windows
-1. Use "Add or Remove Programs" in Settings
-2. Optionally delete data in `%APPDATA%/wovly-assistant`
+## Build from Source
 
-### Linux
-1. Delete the AppImage file
-2. Optionally delete data: `rm -rf ~/.wovly-assistant`
+If you prefer to run from source or want to contribute:
+
+```bash
+# Prerequisites: Node.js 18+, Git
+
+# Clone the repository
+git clone https://github.com/wovly/wovly.git
+cd wovly
+
+# Install dependencies
+npm install
+
+# Run in development mode (from root directory!)
+npm run dev
+```
+
+<Warning>
+  The `npm run dev` command must be run from the **root** `wovly/` directory, not from a subdirectory. This starts both the UI dev server and Electron together.
+</Warning>
+
+### Troubleshooting Development Mode
+
+If `npm run dev` fails:
+
+1. **Verify you're in the root directory**: `pwd` should show `.../wovly`
+2. **Kill lingering processes**: `pkill -f "vite" ; pkill -f "electron"`
+3. **Clear port conflicts**: `lsof -ti:5173 | xargs kill -9`
+4. **Run separately** if needed:
+   - Terminal 1: `cd apps/ui && npm run dev`
+   - Terminal 2: `cd apps/desktop && npm run dev`

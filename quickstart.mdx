@@ -11,10 +11,14 @@ Get Wovly running and connected to your first integration in just a few minutes.
 
 Before you begin, make sure you have:
 
+- **macOS** 10.15 (Catalina) or later
 - **Node.js 18+** - Download from [nodejs.org](https://nodejs.org)
 - **Git** - Download from [git-scm.com](https://git-scm.com)
-- **macOS, Windows, or Linux**
 - An API key for at least one LLM provider (Anthropic, OpenAI, or Google)
+
+<Note>
+  **Beta Notice:** Wovly is currently in beta on macOS. Windows and Linux support coming soon. [Report bugs or request features](https://github.com/wovly/wovly/issues) on GitHub.
+</Note>
 
 ## Step 1: Clone and Install
 
@@ -28,12 +32,12 @@ cd wovly
 # Install dependencies
 npm install
 
-# Start the application
+# Start the application (from root directory!)
 npm run dev
 ```
 
 <Note>
-  The first run may take a moment while dependencies are compiled. The app window will open automatically when ready.
+  The `npm run dev` command must be run from the **root** `wovly/` directory. It starts both the UI dev server (Vite) and the Electron app simultaneously. The first run may take a moment while dependencies compile. The app window will open automatically when ready.
 </Note>
 
 ## Step 2: Create an Account
@@ -45,7 +49,7 @@ When Wovly opens:
 3. This creates a local profile on your machine (no cloud account needed)
 
 <Tip>
-  All data is stored locally on your device. Your credentials are never sent to any server.
+  Your profile, tasks, and credentials are stored locally on your device. Chat conversations are sent to your chosen LLM provider via API. See [Security](/reference/security) for details.
 </Tip>
 
 ## Step 3: Configure LLM Provider
@@ -101,8 +105,10 @@ You're ready! Try these example requests:
 
 ## Development Commands
 
+All commands should be run from the **root** `wovly/` directory:
+
 ```bash
-# Start in development mode (hot reload)
+# Start in development mode (runs UI + Electron together)
 npm run dev
 
 # Build for production
@@ -110,6 +116,19 @@ npm run build
 
 # Run linter
 npm run lint
+```
+
+### Running Components Separately
+
+If `npm run dev` isn't working, you can run the UI and Electron in separate terminals:
+
+```bash
+# Terminal 1: Start UI dev server first
+cd apps/ui && npm run dev
+# Wait for "Local: http://localhost:5173/" to appear
+
+# Terminal 2: Then start Electron
+cd apps/desktop && npm run dev
 ```
 
 ## What's Next?
@@ -135,8 +154,17 @@ npm run lint
   <Accordion title="npm install fails">
     Make sure you have Node.js 18+ installed. Run `node --version` to check.
   </Accordion>
-  <Accordion title="App window doesn't open">
-    Check the terminal for errors. You may need to install additional dependencies for Electron on Linux.
+  <Accordion title="npm run dev fails or app doesn't open">
+    1. **Make sure you're in the root directory** - Run `pwd` to confirm you're in the `wovly/` folder, not a subdirectory
+    2. **Kill lingering processes** - Previous runs may have left processes running:
+    ```bash
+    pkill -f "vite" ; pkill -f "electron"
+    ```
+    3. **Port conflict** - If port 5173 is in use:
+    ```bash
+    lsof -ti:5173 | xargs kill -9
+    ```
+    4. **Try running separately** - Start UI first in one terminal (`cd apps/ui && npm run dev`), then Electron in another (`cd apps/desktop && npm run dev`)
   </Accordion>
   <Accordion title="iMessage not working (macOS)">
     Ensure Full Disk Access is granted in System Preferences → Privacy & Security → Full Disk Access.

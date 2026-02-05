@@ -7,6 +7,10 @@ description: "Wovly is your autonomous communication agent - a privacy-focused A
 
 Wovly is your **autonomous communication agent** - a privacy-focused AI assistant that manages your inbox, replies, and follow-ups across all your communication platforms.
 
+<Warning>
+  **Beta Notice:** Wovly is currently in beta on macOS. Windows and Linux support coming soon. We appreciate your feedback! [Report bugs or request features](https://github.com/wovly/wovly/issues) on GitHub.
+</Warning>
+
 <img src="/images/screenshot.png" alt="Wovly Screenshot" style={{ borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', marginTop: '20px', marginBottom: '20px' }} />
 
 <CardGroup cols={2}>
@@ -24,29 +28,135 @@ Wovly is your **autonomous communication agent** - a privacy-focused AI assistan
   </Card>
 </CardGroup>
 
-## What Makes Wovly Different
+---
 
-### Privacy-First Architecture
+## Features
 
-All your data stays on your machine. Wovly stores integration tokens locally and makes API calls directly from your computer - nothing passes through external servers.
+<CardGroup cols={2}>
+  <Card title="Multi-Platform Communication" icon="comments">
+    **Unified Inbox** – Manage Email, Slack, iMessage, WhatsApp, Telegram, and Discord from one interface
+    
+    **Voice Mimic** – Learns your communication style per contact and platform
+    
+    **Cross-Platform** – "Text my wife, then Slack my boss" in a single command
+  </Card>
+  <Card title="Autonomous Task Execution" icon="robot">
+    **Natural Language Tasks** – Describe your goals: "monitor my email and schedule appointments"
+    
+    **Persistent Follow-ups** – Monitors for replies and follows up intelligently
+    
+    **Smart Scheduling** – Automatically books meetings via calendar or Calendly
+  </Card>
+  <Card title="Intelligent Memory" icon="brain">
+    **Long-term Memory** – Remembers facts, relationships, and preferences
+    
+    **Daily Logs** – Automatic conversation summarization and context retention
+    
+    **Personal Profile** – Knows your family, job, location, allergies, preferences
+  </Card>
+  <Card title="Customizable Skills" icon="wand-magic-sparkles">
+    **Teach Once, Automate Forever** – Define SOPs that Wovly follows consistently
+    
+    **Personal Playbooks** – Create reusable workflows tailored to your role
+    
+    **Guardrails** – Set constraints like "never auto-send to executives"
+  </Card>
+  <Card title="Browser Automation" icon="globe">
+    **Web Research** – Navigate websites, extract data, fill forms
+    
+    **Credential Management** – Securely stored logins for automated authentication
+    
+    **Anti-Detection** – Built-in measures to reduce bot detection
+  </Card>
+  <Card title="Privacy-First" icon="lock">
+    **Local Storage** – App data stays on your machine
+    
+    **LLM API Calls** – Chat sent to your chosen provider via API
+    
+    **No Wovly Servers** – Direct API calls, nothing passes through us
+  </Card>
+</CardGroup>
 
-### Autonomous Execution
+---
 
-Create **Tasks** that run in the background - scheduling meetings, following up on emails, coordinating with multiple people - all without constant supervision.
+## Use Cases
 
-### Voice Mimicry
+### Scheduling & Coordination
 
-Wovly learns your communication style for each recipient. When drafting messages, it matches your tone, formality, and patterns so responses sound authentically like you.
+<CardGroup cols={3}>
+  <Card title="Meeting Scheduling" icon="calendar">
+    *"Schedule a meeting with John next week"*
+    
+    Emails John, negotiates times, checks your calendar, creates the event
+  </Card>
+  <Card title="Family Coordination" icon="users">
+    *"Text my wife to coordinate kid pickup today"*
+    
+    Converses to align schedules and confirms the plan
+  </Card>
+  <Card title="Link Booking" icon="link">
+    *"Chris sent me a calendar link in Slack. Find a time and book it"*
+    
+    Opens the link, cross-references your calendar, completes booking
+  </Card>
+</CardGroup>
 
-### Multi-Platform Support
+### Communication & Research
 
-Connect to:
-- **Email**: Gmail via Google Workspace
-- **Chat**: Slack, Discord, Telegram
-- **Messaging**: iMessage/SMS, WhatsApp
-- **Social**: X (Twitter), Reddit
-- **Productivity**: Notion, GitHub, Asana, Spotify
-- **Web**: Full browser automation for research
+<CardGroup cols={3}>
+  <Card title="Context Synthesis" icon="file-lines">
+    *"Based on the PRD and Slack messages, write an update to sales"*
+    
+    Synthesizes context and drafts a personalized message
+  </Card>
+  <Card title="Outreach Campaigns" icon="envelope">
+    *"Email the top 3 candidates and ask about availability"*
+    
+    Sends personalized outreach and tracks responses
+  </Card>
+  <Card title="Channel Analysis" icon="magnifying-glass-chart">
+    *"Scan the sales channel over 30 days and provide insights"*
+    
+    Processes chat history to generate actionable insights
+  </Card>
+</CardGroup>
+
+### Web Automation
+
+<CardGroup cols={3}>
+  <Card title="Profile Research" icon="user-magnifying-glass">
+    *"Go to LinkedIn and get the profile summary of [person]"*
+    
+    Navigates and extracts the information
+  </Card>
+  <Card title="Price Checking" icon="plane">
+    *"Check flight prices from Boston to Miami on Google Flights"*
+    
+    Browses the site and reports options
+  </Card>
+  <Card title="Form Filling" icon="rectangle-list">
+    *"Fill out the contact form on [website] with my information"*
+    
+    Navigates, fills fields, and submits
+  </Card>
+</CardGroup>
+
+### Monitoring & Alerts
+
+<CardGroup cols={2}>
+  <Card title="Weather Monitoring" icon="cloud-sun-rain">
+    *"Monitor the weather and alert me if it's going to rain"*
+    
+    Checks periodically and notifies before rain
+  </Card>
+  <Card title="Inbox Watching" icon="inbox">
+    *"Watch my inbox for emails from [client] and summarize immediately"*
+    
+    Monitors and alerts in real-time
+  </Card>
+</CardGroup>
+
+---
 
 ## Core Concepts
 
@@ -65,12 +175,55 @@ Connect to:
   </Accordion>
 </AccordionGroup>
 
+---
+
+## Integrations
+
+<CardGroup cols={4}>
+  <Card title="Google Workspace" icon="google" href="/integrations/google-workspace">
+    Gmail, Calendar
+  </Card>
+  <Card title="Slack" icon="slack" href="/integrations/slack">
+    Messaging, Channels
+  </Card>
+  <Card title="iMessage" icon="message" href="/integrations/imessage">
+    macOS texting
+  </Card>
+  <Card title="WhatsApp" icon="whatsapp" href="/integrations/whatsapp">
+    Two-way messaging
+  </Card>
+  <Card title="Telegram" icon="telegram" href="/integrations/telegram">
+    Bot interface
+  </Card>
+  <Card title="Discord" icon="discord" href="/integrations/discord">
+    Server messaging
+  </Card>
+  <Card title="GitHub" icon="github" href="/integrations/github">
+    Repos, Issues
+  </Card>
+  <Card title="Browser" icon="globe" href="/integrations/browser-automation">
+    Web automation
+  </Card>
+</CardGroup>
+
+---
+
 ## Getting Started
 
-1. **Download** Wovly from the [releases page](https://github.com/bluerune234/wovly/releases)
-2. **Configure** your LLM provider (Anthropic, OpenAI, or Google)
-3. **Connect** your communication platforms
-4. **Start chatting** - ask Wovly to help with emails, scheduling, or research
+<Steps>
+  <Step title="Install Wovly">
+    Clone the repository and run `npm install` from the root directory
+  </Step>
+  <Step title="Configure LLM Provider">
+    Add your API key from Anthropic, OpenAI, or Google in Settings
+  </Step>
+  <Step title="Connect Platforms">
+    Link your communication platforms from the Integrations page
+  </Step>
+  <Step title="Start Chatting">
+    Ask Wovly to help with emails, scheduling, or research
+  </Step>
+</Steps>
 
 <Card title="Ready to begin?" icon="arrow-right" href="/quickstart">
   Follow the Quick Start guide to set up Wovly in 5 minutes

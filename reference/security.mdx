@@ -11,7 +11,7 @@ Wovly is designed with privacy and security as core principles.
 
 ### Local Data Storage
 
-All your data stays on your machine:
+Your application data stays on your machine:
 
 ```
 ~/.wovly-assistant/
@@ -21,7 +21,11 @@ All your data stays on your machine:
 └── tasks/             # Task data
 ```
 
-Nothing is synced to cloud servers.
+This data is never synced to cloud servers or Wovly servers.
+
+<Warning>
+  **Important:** When you chat with Wovly, your messages are sent to your chosen LLM provider (Anthropic, OpenAI, or Google) via their APIs. Review the [LLM Privacy](#llm-privacy) section for details on what is sent.
+</Warning>
 
 ### No Wovly Servers
 
@@ -43,8 +47,10 @@ Integration tokens are encrypted using your operating system's secure storage:
 | Platform | Encryption Method |
 |----------|-------------------|
 | macOS | Keychain |
-| Windows | DPAPI |
-| Linux | Secret Service |
+
+<Note>
+  Windows (DPAPI) and Linux (Secret Service) support coming soon.
+</Note>
 
 ### Credentials
 
