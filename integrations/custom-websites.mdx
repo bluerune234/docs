@@ -1,0 +1,383 @@
+---
+title: "Custom Website Integrations"
+description: "Scrape messages from any website without an API - daycare portals, healthcare sites, school systems"
+icon: "globe"
+---
+
+# Custom Website Integrations
+
+Extract messages and notifications from websites that don't have APIs (like MyChart, Brightwheel, school portals, tax sites) using Wovly's intelligent recording wizard.
+
+<img
+  src="/images/integrations.png"
+  alt="Custom Website Integration Setup"
+/>
+
+## Overview
+
+Custom website integrations let you:
+- **Record your login flow once** - Wovly replays it automatically on schedule
+- **Automatic 2FA** - Retrieves verification codes from iMessage (SMS) or Gmail (Email)
+- **OAuth/SSO support** - Works with Google, Microsoft, and other OAuth providers
+- **Session persistence** - Stays logged in across scraping runs
+- **Message extraction** - AI detects and extracts messages automatically
+
+## Supported Login Methods
+
+<CardGroup cols={2}>
+  <Card title="Form-Based Login" icon="rectangle-list">
+    **Standard username/password**
+    - Email and password fields
+    - Multi-step login flows
+    - Custom form layouts
+
+    **Examples:** Brightwheel, school portals, custom SaaS tools
+  </Card>
+
+  <Card title="OAuth / SSO" icon="key">
+    **Third-party authentication**
+    - Sign in with Google
+    - Sign in with Microsoft
+    - Sign in with Facebook
+    - Generic OAuth providers
+
+    **Examples:** Notion, Asana, modern SaaS apps
+  </Card>
+</CardGroup>
+
+## Automatic 2FA Support
+
+Wovly can automatically retrieve verification codes from your phone or email:
+
+<Tabs>
+  <Tab title="SMS (iMessage)">
+    **Requirements:**
+    - macOS device
+    - iMessage enabled in Settings
+    - Full Disk Access granted to Wovly
+
+    **How it works:**
+    1. Website sends SMS code to your phone
+    2. Wovly searches iMessage database for recent messages
+    3. AI extracts the 4-8 digit code
+    4. Code is entered automatically
+
+    **Supported websites:** Any site that sends verification codes via SMS
+  </Tab>
+
+  <Tab title="Email (Gmail)">
+    **Requirements:**
+    - Gmail integration connected
+    - OAuth access granted
+
+    **How it works:**
+    1. Website sends email code to your Gmail
+    2. Wovly searches recent emails (last 5 minutes)
+    3. AI extracts the verification code
+    4. Code is entered automatically
+
+    **Supported websites:** Any site that sends verification codes via email
+  </Tab>
+
+  <Tab title="Authenticator App">
+    **Manual entry required:**
+    - Authenticator apps (Google Authenticator, Authy, etc.)
+    - Hardware tokens
+
+    **How it works:**
+    1. Wovly shows browser window when 2FA needed
+    2. You enter the code manually from your authenticator app
+    3. Scraping continues after you complete 2FA
+
+    **Note:** Authenticator codes cannot be automated for security reasons
+  </Tab>
+</Tabs>
+
+## Setup Guide
+
+### Step 1: Add Integration
+
+1. Go to **Integrations** page
+2. Click **"+ Add Custom Website"**
+3. Enter website name and URL
+4. Select login method (Form or OAuth/SSO)
+
+### Step 2: Save Credentials (Form Login Only)
+
+<Warning>
+For form-based logins, you must save credentials first.
+</Warning>
+
+1. Click **"Manage Credentials"**
+2. Add credentials for the website domain
+3. Username and password are encrypted locally
+4. Never sent to any server or LLM
+
+### Step 3: Record Login Flow
+
+<Steps>
+  <Step title="Start Recording">
+    Click **"Start Recording"** to open a browser window with recording overlay
+  </Step>
+
+  <Step title="Complete Login">
+    - Enter your username and password (or use OAuth)
+    - Complete any 2FA if required
+    - Navigate to your messages/inbox page
+    - **Important:** Go all the way to where messages are displayed
+  </Step>
+
+  <Step title="Stop Recording">
+    Click **"Stop Recording"** in the browser overlay when you reach your messages
+  </Step>
+
+  <Step title="AI Detection">
+    Wovly automatically detects:
+    - Login form fields and buttons
+    - 2FA method (SMS, Email, or Authenticator)
+    - Required integration for 2FA automation
+    - Message selectors on the final page
+  </Step>
+</Steps>
+
+### Step 4: Test & Save
+
+1. Click **"Test"** to verify the integration works
+2. Wovly will replay your recorded steps automatically
+3. If 2FA is required:
+   - **Automatic:** Code retrieved and entered (if iMessage/Gmail connected)
+   - **Manual:** Browser shown for you to enter code
+4. Click **"Save"** when test succeeds
+
+## How Recording Works
+
+The recording wizard captures every action you take:
+
+<CodeGroup>
+
+```text Actions Tracked
+✓ Click on input fields
+✓ Type username and password
+✓ Click submit buttons
+✓ Navigate between pages
+✓ Click 2FA method selection buttons
+✓ Enter 2FA codes
+✓ Navigate to messages page
+```
+
+```text What Gets Saved
+Login sequence:
+1. Type username → #username field
+2. Click → Submit button
+3. Type password → #password field
+4. Click → Submit button
+5. Click → "Text to my phone" button
+6. Type 2FA code → #verification field
+7. Click → Verify button
+
+Navigation sequence:
+1. Click → Messages tab
+2. Wait for messages to load
+
+Message selectors:
+- Container: .message-list
+- Item: .message-item
+- Sender: .sender-name
+- Content: .message-text
+- Timestamp: .message-date
+```
+
+</CodeGroup>
+
+## Scheduled Scraping
+
+Once set up, Wovly automatically checks for new messages:
+
+<Tabs>
+  <Tab title="Default Schedule">
+    **Every hour** by default
+
+    You can adjust frequency in Settings → Integrations
+  </Tab>
+
+  <Tab title="Automatic Login">
+    **Session reuse:**
+    - Cookies saved after first login
+    - Session validated before each scrape
+    - Automatic re-login if session expired
+
+    **2FA handling:**
+    - Automatic code retrieval (if configured)
+    - Manual fallback (browser shown)
+  </Tab>
+
+  <Tab title="Message Extraction">
+    **AI-powered detection:**
+    - Extracts sender, content, timestamp
+    - Filters new messages since last check
+    - Stores locally for insights analysis
+  </Tab>
+</Tabs>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Recording stuck or not capturing">
+    **Solutions:**
+    - Ensure you're clicking visible elements
+    - Wait for page loads between actions
+    - Try recording again with slower, more deliberate actions
+    - Check browser console for errors (Cmd+Opt+I)
+  </Accordion>
+
+  <Accordion title="2FA not detected during recording">
+    **Possible causes:**
+    - You skipped 2FA during recording (try logging out first)
+    - 2FA field wasn't visible or interacted with
+
+    **Solutions:**
+    - Log out of the website before recording
+    - Make sure to trigger 2FA during recording
+    - Complete the full 2FA flow (including code entry)
+  </Accordion>
+
+  <Accordion title="Automatic 2FA not working">
+    **For SMS (iMessage):**
+    - Enable iMessage in Settings → Integrations
+    - Grant Full Disk Access to Wovly in System Preferences
+    - Ensure SMS messages are being received on your Mac
+
+    **For Email (Gmail):**
+    - Connect Gmail integration
+    - Grant OAuth access
+    - Check that verification emails arrive in Gmail (not spam)
+  </Accordion>
+
+  <Accordion title="Session expired - login fails">
+    **Causes:**
+    - Cookies cleared or expired
+    - Website changed login flow
+    - Session timeout too short
+
+    **Solutions:**
+    - Wovly will automatically re-login using recorded sequence
+    - If 2FA required, you'll be notified to complete it manually
+    - Update session timeout in integration settings
+  </Accordion>
+
+  <Accordion title="Messages not being extracted">
+    **Solutions:**
+    - Check that you navigated to messages page during recording
+    - Verify message selectors are detected (shown after recording)
+    - Try recording again, making sure to reach the messages view
+    - Check browser console during test for selector errors
+  </Accordion>
+
+  <Accordion title="Browser window shows up during scheduled scrape">
+    **This is expected for manual 2FA:**
+    - Automatic 2FA not configured or failed
+    - Browser shown for you to complete 2FA manually
+    - After you enter code, scraping continues
+    - Consider connecting iMessage/Gmail for automation
+  </Accordion>
+</AccordionGroup>
+
+## Examples
+
+<CodeGroup>
+
+```text Example 1: MyChart (Healthcare Portal)
+Login: Form-based
+2FA: Email-based
+
+Setup:
+1. Save credentials for mychart.chppoc.org
+2. Record: Login → Gmail 2FA → Navigate to messages
+3. Connect Gmail integration
+4. Test: ✓ Automatic 2FA via Gmail
+
+Result: Fully automated, checks hourly for new messages
+```
+
+```text Example 2: Brightwheel (Daycare Portal)
+Login: Form-based
+2FA: SMS-based
+
+Setup:
+1. Save credentials for mybrightwheel.com
+2. Record: Login → SMS 2FA → Navigate to messages
+3. Enable iMessage in Settings
+4. Test: ✓ Automatic 2FA via iMessage
+
+Result: Fully automated, extracts announcements and updates
+```
+
+```text Example 3: Notion (OAuth/SSO)
+Login: Google OAuth
+2FA: None
+
+Setup:
+1. Select "OAuth / SSO" method
+2. Record: Click "Sign in with Google" → Navigate to pages
+3. Test: ✓ OAuth session persists
+
+Result: Automated, extracts shared page updates
+```
+
+</CodeGroup>
+
+## Privacy & Security
+
+<Warning>
+**Your data stays on your device:**
+- Credentials encrypted locally (never sent to servers)
+- Browser sessions isolated per user
+- Message extraction happens on your machine
+- Only extracted message text sent to LLM for insights
+</Warning>
+
+**Security measures:**
+- OS-level encryption (Keychain on macOS)
+- Per-user browser profiles
+- Session cookies stored locally
+- Full Disk Access required only for iMessage (user-controlled)
+
+## Best Practices
+
+<Tip>
+**Before recording:**
+- Log out of the website first
+- Have your credentials ready
+- Know your 2FA method
+- Plan the navigation path to messages
+</Tip>
+
+<Tip>
+**During recording:**
+- Click elements slowly and deliberately
+- Wait for pages to fully load
+- Complete the entire flow (including 2FA)
+- End at the messages/inbox view
+</Tip>
+
+<Tip>
+**After recording:**
+- Always click "Test" before saving
+- Verify messages are extracted correctly
+- Check 2FA status (automated or manual)
+- Adjust scraping frequency if needed
+</Tip>
+
+## Related Documentation
+
+<CardGroup cols={3}>
+  <Card title="Browser Automation" icon="globe" href="/integrations/browser-automation">
+    General browser automation capabilities
+  </Card>
+  <Card title="Credentials" icon="key" href="/integrations/credentials">
+    Secure credential management
+  </Card>
+  <Card title="Insights" icon="lightbulb" href="/features/insights">
+    How messages become insights
+  </Card>
+</CardGroup>

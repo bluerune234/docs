@@ -47,6 +47,7 @@
               "integrations/asana",
               "integrations/reddit",
               "integrations/spotify",
+              "integrations/custom-websites",
               "integrations/browser-automation",
               "integrations/credentials"
             ]
